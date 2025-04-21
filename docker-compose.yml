@@ -45,13 +45,10 @@ services:
     restart: unless-stopped
     depends_on:
       - elasticsearch
-      - enterprise-search
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ENTERPRISESEARCH_HOST=http://enterprise-search:3002
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=Elastic@123
-      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=X5rtEXBA3Js1sNMu7VpY4QKIEBpjwzkb231
+      - ELASTICSEARCH_USERNAME=<fill in username>
+      - ELASTICSEARCH_PASSWORD=<fill in password>
     ports:
       - "5601:5601"
     networks:
@@ -63,3 +60,4 @@ volumes:
 networks:
   elastic:
     driver: bridge
+
