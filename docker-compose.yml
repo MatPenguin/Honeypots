@@ -1,46 +1,34 @@
 version: "3.8"
 
-networks:
-  elastic:
-    driver: bridge
-
-volumes:
-  elasticsearch:
-    driver: local
-
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.0
-    container_name: es01
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.18.0
     restart: unless-stopped
     environment:
       - discovery.type=single-node
-      - ELASTIC_PASSWORD=Elastic@123
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - xpack.security.enabled=true
       - xpack.security.authc.api_key.enabled=true
-      - xpack.license.self_generated.type=basic
-      - bootstrap.memory_lock=true
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - ELASTIC_PASSWORD=Elastic@123
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - elasticsearch:/usr/share/elasticsearch/data
+      - elasticsearch-data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
     networks:
       - elastic
 
-  ent-search:
-    image: docker.elastic.co/enterprise-search/enterprise-search:9.0.0
-    container_name: ent01
+  enterprise-search:
+    image: docker.elastic.co/enterprise-search/enterprise-search:8.18.0
     restart: unless-stopped
     depends_on:
       - elasticsearch
     environment:
-      - JAVA_OPTS=-Xms1g -Xmx1g
-      - ent_search.auth.default.password=Elastic@123
+      - JAVA_OPTS=-Xms512m -Xmx512m
+      - ENT_SEARCH_DEFAULT_PASSWORD=Elastic@123
       - elasticsearch.username=elastic
       - elasticsearch.password=Elastic@123
       - elasticsearch.host=http://elasticsearch:9200
@@ -53,20 +41,25 @@ services:
       - elastic
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:9.0.0
-    container_name: kib01
+    image: docker.elastic.co/kibana/kibana:8.18.0
     restart: unless-stopped
     depends_on:
       - elasticsearch
-      - ent-search
-    ports:
-      - "5601:5601"
+      - enterprise-search
     environment:
-      - SERVER_NAME=kibana
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ENTERPRISESEARCH_HOST=http://ent-search:3002
+      - ENTERPRISESEARCH_HOST=http://enterprise-search:3002
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=Elastic@123
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=X5rtEXBA3Js1sNMu7VpY4QKIEBpjwzkb231
+    ports:
+      - "5601:5601"
     networks:
       - elastic
+
+volumes:
+  elasticsearch-data:
+
+networks:
+  elastic:
+    driver: bridge
