@@ -1,4 +1,4 @@
-version: "2.2"
+version: "3.8"
 
 services:
   setup:
@@ -91,7 +91,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
       - xpack.ml.use_auto_machine_memory_percent=true
-    mem_limit: ${MEM_LIMIT}
+    mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
@@ -132,7 +132,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
       - xpack.ml.use_auto_machine_memory_percent=true
-    mem_limit: ${MEM_LIMIT}
+    mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
@@ -173,7 +173,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
       - xpack.ml.use_auto_machine_memory_percent=true
-    mem_limit: ${MEM_LIMIT}
+    mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
@@ -208,7 +208,10 @@ services:
       - ELASTICSEARCH_USERNAME=kibana_system
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
-    mem_limit: ${MEM_LIMIT}
+      - XPACK_SECURITY_ENCRYPTIONKEY=pg8/7ZDpq55rsK6EVYKLU+bqjwGbcaJQJuq7BytTVH joGy22qBs3yUHDS6Qn9VQi
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=1bbUVS4S8DcyaJkabRyG+pkQM/F4MKQPQjGyLeFBzIUMYjwXobAI9jbLBDY1SDKL
+      - XPACK_REPORTING_ENCRYPTIONKEY=hhG6MTSVSQPAWABQ34gSeeDQ0IIANKbTRcWiBh5sDtSJAbtwQb3S6P0HpaP311Z
+    mem_limit: ${KB_MEM_LIMIT}
     healthcheck:
       test:
         [
