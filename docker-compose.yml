@@ -254,8 +254,3 @@ volumes:
     driver: local
   logstashdata:
     driver: local
-
-networks:
-  elastic:
-    driver: bridge
-
